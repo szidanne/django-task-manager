@@ -95,6 +95,14 @@ DATABASES = {
     }
 }
 
+if os.getenv("USE_SQLITE_FOR_TESTS", "0") == "1":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",  # or BASE_DIR / "test.sqlite3"
+        }
+    }
+
 # rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
