@@ -17,8 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from accounts.views import home
 from django.conf import settings
+
 
 urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
@@ -29,6 +32,11 @@ urlpatterns = [
     # auth
     path("accounts/", include("django.contrib.auth.urls")),  # login/logout/reset
     path("accounts/", include("accounts.urls")),
+    # jwt
+    path("api/auth/jwt/create/", TokenObtainPairView.as_view(), name="jwt_create"),
+    path("api/auth/jwt/refresh/", TokenRefreshView.as_view(), name="jwt_refresh"),
+    # browsable api login
+    path("api-auth/", include("rest_framework.urls")),
 ]
 
 if settings.DEBUG:
