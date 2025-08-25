@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}My Tasks{% endblock %}
+
+{% block content %}
+<section class="space-y-6">
+  <header class="prose prose-invert max-w-none">
+    <h1 class="text-3xl font-bold">My Tasks</h1>
+    <p class="text-base-content/70">Plan, track, and finish what matters.</p>
+  </header>
+  {% if tasks %}
+  <div class="flex items-center justify-between">
+    <a href="{% url 'tasks:create' %}" class="btn btn-primary">+ Create Task</a>
+  </div>
+  {% endif %}
+
+  {% if tasks %}
+    <div class="card bg-base-100 shadow">
+      <ul class="divide-y divide-base-300">
+        {% for task in tasks %}
+          <li class="p-4 flex items-center justify-between gap-4">
+            <div class="min-w-0">
+              <a href="{% url 'tasks:detail' task.id %}" class="link link-hover font-medium block truncate text-base">
+                {{ task.title }}
+              </a>
+              <div class="text-sm opacity-70">
+                {{ task.get_status_display }}
+                {% if task.due_date %} · due {{ task.due_date|date:"M j, Y" }}{% endif %}
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              {% if task.status == "PENDING" %}
+                <span class="badge badge-warning">Pending</span>
+              {% elif task.status == "IN_PROGRESS" %}
+                <span class="badge badge-info">In progress</span>
+              {% elif task.status == "COMPLETED" %}
+                <span class="badge badge-success">Completed</span>
+              {% else %}
+                <span class="badge badge-ghost">{{ task.get_status_display }}</span>
+              {% endif %}
+              <a href="{% url 'tasks:edit' task.id %}" class="btn btn-ghost btn-sm">Edit</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <div class="card bg-base-100 shadow">
+      <div class="card-body items-center text-center space-y-3">
+        <h3 class="card-title text-xl">No tasks yet</h3>
+        <p class="text-base-content/70">Create your first task to get started.</p>
+        <a href="{% url 'tasks:create' %}" class="btn btn-primary">+ Create Task</a>
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

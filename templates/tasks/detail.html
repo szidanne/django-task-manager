@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Task Detail{% endblock %}
+
+{% block content %}
+<section class="max-w-2xl mx-auto mt-12">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-6">
+
+      <!-- Title + Status -->
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold">{{ task.title }}</h1>
+        <div class="flex items-center gap-2">
+          <span class="font-medium">Status:</span>
+          {% if task.status == "PENDING" %}
+            <span class="badge badge-warning">Pending</span>
+          {% elif task.status == "IN_PROGRESS" %}
+            <span class="badge badge-info">In Progress</span>
+          {% elif task.status == "COMPLETED" %}
+            <span class="badge badge-success">Completed</span>
+          {% else %}
+            <span class="badge">{{ task.get_status_display }}</span>
+          {% endif %}
+        </div>
+        {% if task.due_date %}
+          <p class="text-sm text-base-content/70">
+            <span class="font-medium">Due:</span> {{ task.due_date|date:"M j, Y" }}
+          </p>
+        {% endif %}
+      </header>
+
+      <!-- Description -->
+      <section class="prose prose-invert max-w-none">
+        {{ task.description|linebreaks }}
+      </section>
+
+      <!-- Actions -->
+      <footer class="flex flex-wrap items-center gap-3 pt-6">
+        <a href="{% url 'tasks:edit' task.id %}" class="btn btn-outline btn-sm">Edit</a>
+        <a href="{% url 'tasks:delete' task.id %}" class="btn btn-error bg-red-300 border-none btn-sm">Delete</a>
+        <a href="{% url 'tasks:index' %}" class="btn btn-ghost btn-sm">&larr; Back to list</a>
+      </footer>
+    </div>
+  </div>
+</section>
+{% endblock %}

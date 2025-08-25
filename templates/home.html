@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<section class="hero bg-base-100 rounded-2xl shadow">
+  <div class="hero-content flex-col lg:flex-row gap-10 w-full">
+    <div class="prose prose-invert max-w-none p-6 py-12">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+        Welcome, mysterious stranger 👀
+      </h1>
+      <p class="mt-2 text-base-content/70">
+        This is a tiny tasks app. Log in or sign up to see your tasks.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'accounts:signup' %}" class="btn btn-outline">Sign up</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-10 grid gap-4 md:grid-cols-3">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h3 class="card-title text-lg">Organize</h3>
+      <p class="opacity-80">Create tasks with due dates and statuses.</p>
+    </div>
+  </div>
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h3 class="card-title text-lg">Focus</h3>
+      <p class="opacity-80">Everything is scoped to your account.</p>
+    </div>
+  </div>
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h3 class="card-title text-lg">Move fast</h3>
+      <p class="opacity-80">Create, edit, and complete in seconds.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="max-w-lg mx-auto mt-12">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold">Welcome back</h1>
+        <p class="text-base-content/70">Sign in to see your tasks.</p>
+      </header>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-error">
+          <ul class="list-disc ml-5">
+            {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="form-control">
+            <label class="label pb-1">
+              <span class="label-text font-medium">{{ field.label }}</span>
+            </label>
+
+            {{ field }}
+
+            {% if field.help_text %}
+              <!-- small, readable help text with proper formatting -->
+              <div class="mt-1 prose prose-invert prose-sm max-w-none opacity-80">
+                {{ field.help_text|safe }}
+              </div>
+            {% endif %}
+
+            {% if field.errors %}
+              <p class="mt-1 text-error text-sm">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+        <button type="submit" class="btn btn-primary w-full">Login</button>
+      </form>
+
+      <p class="text-sm text-base-content/70">
+        No account?
+        <a href="{% url 'accounts:signup' %}" class="link link-hover underline">Sign up</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

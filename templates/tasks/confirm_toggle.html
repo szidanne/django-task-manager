@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Toggle Status{% endblock %}
+{% block content %}
+  <h2>Toggle Task Status</h2>
+  <p>Task: <strong>{{ task.title }}</strong></p>
+  <p>Current status: {{ task.get_status_display }}</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Toggle</button>
+  </form>
+  <p><a href="{% url 'tasks:detail' task.id %}">&larr; Cancel</a></p>
+{% endblock %}

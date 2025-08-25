@@ -1,0 +1,42 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dracula">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Tasks{% endblock %}</title>
+  {% tailwind_css %}
+</head>
+<body class="min-h-screen bg-base-200 text-base-content">
+  <header class="navbar bg-base-100 shadow-sm">
+    <div class="container mx-auto px-4 flex justify-between">
+      <div class="flex-1">
+        <a href="{% url 'tasks:index' %}" class="btn btn-ghost normal-case text-xl">
+          Task Manager
+        </a>
+      </div>
+      <div class="flex-none">
+        {% if user.is_authenticated %}
+          <form action="{% url 'logout' %}" method="post" class="flex items-center gap-3">
+            {% csrf_token %}
+            <span class="hidden sm:inline">
+              Logged in as <span class="font-semibold">{{ user.username }}</span>
+            </span>
+            <button type="submit" class="btn btn-primary btn-sm">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="container mx-auto px-4 py-6 text-center text-sm text-base-content/70">
+    <hr class="my-6 border-base-300">
+    <p>Built with Django + Tailwind + DaisyUI</p>
+  </footer>
+</body>
+</html>

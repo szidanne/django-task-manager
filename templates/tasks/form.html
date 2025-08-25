@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Task Form{% endblock %}
+
+{% block content %}
+<section class="max-w-xl mx-auto mt-16">
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body space-y-8">
+
+      <!-- Header -->
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold">
+          {% if task %}Edit Task{% else %}Create Task{% endif %}
+        </h1>
+        <p class="text-base-content/70">
+          {% if task %}
+            Update the details of your task below.
+          {% else %}
+            Fill out the form to add a new task.
+          {% endif %}
+        </p>
+      </header>
+
+      <!-- Form -->
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="form-control flex flex-col gap-y-1">
+            <label class="label">
+              <span class="label-text font-medium">{{ field.label }}</span>
+            </label>
+
+            {{ field }}
+
+            {% if field.help_text %}
+              <p class="text-xs opacity-70 mt-1">{{ field.help_text|safe }}</p>
+            {% endif %}
+
+            {% if field.errors %}
+              <p class="text-error text-sm mt-1">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <!-- Actions -->
+        <div class="flex items-center gap-4 pt-4">
+          <button type="submit" class="btn btn-primary">
+            Save
+          </button>
+          <a href="{% url 'tasks:index' %}" class="btn btn-ghost">
+            &larr; Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
