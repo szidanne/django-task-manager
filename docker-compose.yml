@@ -34,19 +34,6 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
 
-  tailwind:
-    <<: *default-app
-    command: bash -lc "python manage.py tailwind install && python manage.py tailwind start"
-    # Tailwind watcher needs a TTY or it exits early
-    # https://github.com/tailwindlabs/tailwindcss/issues/5324
-    tty: true
-    depends_on:
-      - db
-    volumes:
-      - .:/app
-      - /app/theme/static_src/node_modules
-      - static_volume:/app/staticfiles
-
   nginx:
     image: nginx:alpine
     container_name: nginx_server
@@ -57,20 +44,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/static
       - media_volume:/app/media
-      - .:/app  # Need access to source files for static serving
+      - .:/app
     depends_on:
-      - web  # Fixed: was "django", should be "web"
-    networks:
-      - app_network
-
-  adminer:
-    image: adminer:latest
-    environment:
-      ADMINER_DEFAULT_SERVER: db
-    depends_on:
-      - db
-    ports:
-      - "8081:8080"
+      - web
     networks:
       - app_network
 
