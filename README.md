@@ -66,7 +66,7 @@ A Django web app with a `Tailwind / DaisyUI` UI, containerized via `Docker`. `Ng
 1. Clone repo. 
 2. Copy the provided env → `.env.docker` and adjust secrets if needed.
 3. Build and run containers: `docker compose up --build`
-4. One-time init / every fresh build (execute inside containers)
+4. One-time init / every fresh build (execute inside web container)
     ```shell
     # collect static, create/apply migrations
     docker compose exec web python manage.py collectstatic --noinput
