@@ -1,0 +1,83 @@
+x-app: &default-app
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file: .env.docker
+  volumes:
+    - .:/app
+    - /app/theme/static_src/node_modules
+  restart: unless-stopped
+  networks:
+    - app_network
+
+services:
+  db:
+    image: postgres:16
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file: .env.docker
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+  web:
+    <<: *default-app
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"     # host:container
+    volumes:
+      - .:/app
+      - /app/theme/static_src/node_modules
+      - static_volume:/app/static
+      - media_volume:/app/media
+
+  tailwind:
+    <<: *default-app
+    command: bash -lc "python manage.py tailwind install && python manage.py tailwind start"
+    # Tailwind watcher needs a TTY or it exits early
+    # https://github.com/tailwindlabs/tailwindcss/issues/5324
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/theme/static_src/node_modules
+      - static_volume:/app/staticfiles
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - .:/app  # Need access to source files for static serving
+    depends_on:
+      - web  # Fixed: was "django", should be "web"
+    networks:
+      - app_network
+
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      - db
+    ports:
+      - "8081:8080"
+    networks:
+      - app_network
+
+volumes:
+  static_volume:
+  media_volume:
+
+networks:
+  app_network:
+    driver: bridge
